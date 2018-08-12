@@ -28,6 +28,7 @@ const (
 )
 
 // NewRBatcher create redis batcher instance
+// the uniqueness of the id is important to avoid racing condition with other batcher
 func NewRBatcher(uniqueID string, maxBatch int, redispool *redis.Pool) (batcher *RedisBatcher) {
 	batcher = &RedisBatcher{
 		redispool: redispool,
@@ -54,9 +55,10 @@ func (r *RedisBatcher) Enqueue(element interface{}) (err error) {
 	return
 }
 
-// GetBatch returns elements from the queue as many as maxBatch
-// By Get batch you will open a batch session which need to be closed
-// Before getting another batch by calling CloseBatch
+// GetBatch returns elements from the queue as many as maxBatch.
+// This will open a batch session which need to be closed before getting another batch.
+// When the app crash before calling CloseBatch, the elements will be included on the
+// next GetBatch call
 func (r *RedisBatcher) GetBatch() (elements []interface{}, err error) {
 	if r.openSession {
 		return nil, errors.New("[rbatching] Couldn't open batch, there is another open session")

@@ -5,10 +5,8 @@ import (
 )
 
 const luaGetBatch = `
-local a = nil
 for i=0,ARGV[3] do
- a = redis.call("RPOPLPUSH",ARGV[1],ARGV[2])
- print(a)
+ redis.call("RPOPLPUSH",ARGV[1],ARGV[2])
 end
 local element = redis.call("LRANGE",ARGV[2],0,-1)
 

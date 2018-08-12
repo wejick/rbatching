@@ -27,7 +27,10 @@ All the redis operation is atomic.
     
     // get the batch batch
     val, err := batch.GetBatch()
-    defer batch.CloseBatch() // this is important to close the batch session
+    // Close the batch session when the operation is complete
+    // the data will be available on the next GetBatch() call
+    // when the app crash before CloseBatch get called
+    defer batch.CloseBatch()
 
     if err != nil {
 		log.Println(err)
