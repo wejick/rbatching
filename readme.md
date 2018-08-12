@@ -1,3 +1,5 @@
+[![Godoc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://godoc.org/github.com/wejick/rbatching)
+
 # rbatching
 One pain point of doing batching in local memory is when the program crash all the batch will be gone. Rbatching provide persistent batching mechanism backed by redis, the persistence is as far as redis definition of persistence. 
 The main idea is putting the queue to a redis list, pop and push it to other list before usage then remove when the usage is finished.
